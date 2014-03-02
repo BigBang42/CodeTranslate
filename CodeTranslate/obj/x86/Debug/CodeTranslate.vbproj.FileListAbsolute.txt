@@ -1,0 +1,16 @@
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.exe
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.pdb
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.xml
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\MainWindow.baml
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\MainWindow.g.vb
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\Application.g.vb
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate_MarkupCompile.cache
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.g.resources
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.Resources.resources
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.vbproj.GenerateResource.Cache
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.exe
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.xml
+D:\Alex\Computer\MightyIT\Projekte\Uni\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.pdb
+C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.exe
+C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.xml
+C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.pdb
