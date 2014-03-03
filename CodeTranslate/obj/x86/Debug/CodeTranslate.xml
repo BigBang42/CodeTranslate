@@ -26,6 +26,19 @@ Application Entry Point.
 	<summary>
 Application
 </summary>
+</member><member name="P:CodeTranslate.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:CodeTranslate.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:CodeTranslate.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
 </member><member name="P:CodeTranslate.My.MyWpfExtension.Application">
 	<summary>
  Gibt das Anwendungsobjekt für die ausgeführte Anwendung zurück.
@@ -52,19 +65,6 @@ Application
  Modul zum Definieren der im My-Namespace für WPF verfügbaren Eigenschaften
  </summary>
 	<remarks></remarks>
-</member><member name="P:CodeTranslate.My.Resources.Resources.ResourceManager">
-	<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member><member name="P:CodeTranslate.My.Resources.Resources.Culture">
-	<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:CodeTranslate.My.Resources.Resources">
-	<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
 </member>
 </members>
 </doc>
