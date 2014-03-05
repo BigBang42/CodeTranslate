@@ -1,7 +1,17 @@
 ﻿Public Class POEntry
+    Private Enum EntryStatus
+        Empty = 0
+        ExtractFiles = 1
+        MsgIDExtracted = 2
+        MsgIDPluralExtracted = 3
+        ExtractionComplete = 4
+    End Enum
 
-    Dim _Files As New List(Of String)
-    Dim _BaseEntry As New BaseEntry
+    Private _Files As New List(Of String)
+    Private _BaseEntry As New BaseEntry
+    Private Status As EntryStatus = EntryStatus.Empty
+
+    Private Shared _FuzzyEntryIsProcessed As Boolean = False
 
     ReadOnly Property Files As List(Of String)
         Get
@@ -34,40 +44,61 @@
     End Property
 
     Private Shared Function ExtractFile(Line As String)
-        Return Line.Replace("#: ", String.Empty)
+        Return Line.Substring(Line.IndexOf(":") + 2, Line.LastIndexOf(":") - Line.IndexOf(":") - 2)
     End Function
 
     Private Shared Function ExtractMsgID(Line As String) As String
-        Return Line.Substring(Line.IndexOf(Chr(34)) + 1, Line.LastIndexOf(Chr(34)) - Line.IndexOf(Chr(34)))
+        Return Line.Substring(Line.IndexOf(Chr(34)) + 1, Line.LastIndexOf(Chr(34)) - Line.IndexOf(Chr(34)) - 1)
     End Function
 
     Private Shared Function ExtractMsgStr(Line As String) As String
-        Return Line.Substring(Line.IndexOf(Chr(34)) + 1, Line.LastIndexOf(Chr(34)) - Line.IndexOf(Chr(34)))
+        Return Line.Substring(Line.IndexOf(Chr(34)) + 1, Line.LastIndexOf(Chr(34)) - Line.IndexOf(Chr(34)) - 1)
     End Function
 
     Private Shared Function ImportPOLine(POLine As String, POEntry As POEntry) As Boolean
+        'Static Dim _FuzzyEntryIsProcessed As Boolean = False
 
         Select Case True
             Case POLine.StartsWith("#:")
-                If String.IsNullOrEmpty(POEntry.MsgID) And String.IsNullOrEmpty(POEntry.MsgStr) Then
+                If {EntryStatus.Empty, EntryStatus.ExtractFiles}.Contains(POEntry.Status) Then
+                    POEntry.Status = EntryStatus.ExtractFiles
                     POEntry.Files.Add(ExtractFile(POLine))
                 Else
                     Return False
                 End If
 
-            Case POLine.StartsWith("msgid")
-                If POEntry.Files.Count > 0 Then
-                    POEntry.MsgID = ExtractMsgID(POLine)
+            Case POLine.StartsWith("msgid_plural")
+                If POEntry.Status = EntryStatus.MsgIDExtracted Then
+                    'Wird erstmal ignoriert, da nur in einem File bis jetzt vorkommend
                 Else
                     Return False
                 End If
 
-            Case POLine.StartsWith("msgstr")
-                If Not String.IsNullOrEmpty(POEntry.MsgID) Then
-                    POEntry.MsgStr = ExtractMsgStr(POLine)
+            Case POLine.StartsWith("msgid")
+                If POEntry.Status = EntryStatus.ExtractFiles Then 'Ohne zu bearbeitende Files kein Eintrag
+                    POEntry.MsgID = ExtractMsgID(POLine)
+                    POEntry.Status = EntryStatus.MsgIDExtracted
+                ElseIf POEntry.Status = EntryStatus.Empty And Not _FuzzyEntryIsProcessed Then  'Am Anfang jeder po.-Datei ist eine sog. Fuzzy Entry mit Leerstrings als MsgId und MsgStr
+                    POEntry.Status = EntryStatus.MsgIDExtracted
+                    _FuzzyEntryIsProcessed = True   'Wird diese gerade bearbeitet, ist die Files-Collection natürlich leer, was in diesem Falle kein Fehler ist
                 Else
                     Return False
                 End If
+
+            Case POLine.StartsWith("msgstr[1]")
+                If POEntry.Status = EntryStatus.Empty Then
+                    'Wird erstmal ignoriert, da nur in einem File bis jetzt vorkommend
+                Else
+                    Return False
+                End If
+            Case POLine.StartsWith("msgstr")
+                If POEntry.Status = EntryStatus.MsgIDExtracted Then
+                    POEntry.MsgStr = ExtractMsgStr(POLine)
+                    POEntry.Status = EntryStatus.ExtractionComplete
+                Else
+                    Return False
+                End If
+
         End Select
 
         Return True
@@ -79,16 +110,10 @@
     End Function
 
     Public Function IsComplete() As Boolean
-        If _Files.Count > 0 AndAlso Not String.IsNullOrEmpty(_BaseEntry.MsgID) AndAlso Not String.IsNullOrEmpty(_BaseEntry.MsgStr) Then
-            Return True
-        Else
-            Return False
-        End If
+        Return Status = EntryStatus.ExtractionComplete
     End Function
 
-    Public Sub Clear()
-        _Files.Clear()
-        _BaseEntry.MsgID = Nothing
-        _BaseEntry.MsgStr = Nothing
+    Public Shared Sub Reset()
+        _FuzzyEntryIsProcessed = False
     End Sub
 End Class

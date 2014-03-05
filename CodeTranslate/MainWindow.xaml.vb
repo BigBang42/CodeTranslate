@@ -37,30 +37,9 @@ Class MainWindow
         cbStartReplacement.IsEnabled = (Not String.IsNullOrEmpty(tbPOFile.Text) And Not String.IsNullOrEmpty(tbSourceCodeFolder.Text))
     End Sub
 
-    Private Sub ProcessTranslation()
+    Private Sub cbStartReplacement_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles cbStartReplacement.Click
         Dim POFile As New POFileClass(tbPOFile.Text, tbSourceCodeFolder.Text, pbProgress, lblProgress)
 
-        If Not POFile.CreateEntryList Then
-            MsgBox("An Error occured during creation of entry list. See file Translation.log for details.", MsgBoxStyle.OkOnly, "Error during creation of entry list")
-            Exit Sub
-        End If
-
-
-    End Sub
-
-    Private Sub cbStartReplacement_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles cbStartReplacement.Click
-        Dim FilePathsToProcess As New System.Collections.ObjectModel.ReadOnlyCollection(Of String)(My.Computer.FileSystem.GetFiles(tbSourceCodeFolder.Text,
-                                            Microsoft.VisualBasic.FileIO.SearchOption.SearchAllSubDirectories, "*.*"))
-
-        pbProgress.Maximum = FilePathsToProcess.Count
-
-        For Each foundFile As String In FilePathsToProcess
-            pbProgress.Value += 1
-            Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Background, New System.Action(Function() pbProgress.Visibility = True))
-
-            Dim File As New System.IO.FileInfo(foundFile)
-
-        Next
-
+        POFile.Process()
     End Sub
 End Class
