@@ -1,6 +1,6 @@
 ﻿Public Class BaseEntry
-    Dim _MsgID As String
-    Dim _MsgStr As String
+    Private _MsgID As String
+    Private _MsgStr As String
 
     Property MsgID As String
         Get

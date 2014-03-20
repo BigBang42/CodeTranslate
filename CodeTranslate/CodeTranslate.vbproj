@@ -68,6 +68,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseEntry.vb" />
+    <Compile Include="EntryProperty.vb" />
     <Compile Include="FileToTranslate.vb" />
     <Compile Include="POFileClass.vb" />
     <Compile Include="POEntry.vb" />

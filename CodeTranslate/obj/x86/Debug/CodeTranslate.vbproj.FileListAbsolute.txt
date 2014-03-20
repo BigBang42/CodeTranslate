@@ -24,3 +24,16 @@ C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\
 C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.g.resources
 C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.Resources.resources
 C:\Users\Alex\Documents\Visual Studio 2010\Projects\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.vbproj.GenerateResource.Cache
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.exe
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.xml
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.pdb
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.exe
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.pdb
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\bin\Debug\CodeTranslate.xml
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\MainWindow.baml
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\MainWindow.g.vb
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\Application.g.vb
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate_MarkupCompile.cache
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.g.resources
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.Resources.resources
+C:\Users\lrau\Documents\Visual Studio 2013 Projekte\CodeTranslate\CodeTranslate\obj\x86\Debug\CodeTranslate.vbproj.GenerateResource.Cache

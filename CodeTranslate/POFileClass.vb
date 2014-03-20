@@ -60,17 +60,30 @@ Public Class POFileClass
         Dim POEntry As POEntry
 
         Using StreamReader As New System.IO.StreamReader(_POFilePath)
-            Do
-                POEntry = New POEntry
+            Do While StreamReader.Peek > -1
+                Line = StreamReader.ReadLine
+                LineNumber += 1
+
+                If Line.StartsWith("#:") Then
+                    If POEntry Is Nothing Then  'Allererste Entry wird angelegt
+                        POEntry = New POEntry
+                    Else
+                        If POEntry.Analyze = False Then Return LineNumber 'Entry ist vollständig eingelesen und wird jetzt überprüft und die internen Properties gesetzt
+                        _POEntries.Add(POEntry)
+                        POEntry = New POEntry
+                    End If
+                Else
+                    POEntry.AddRawEntryLine(Line)
+                End If
 
                 Do
-                    Line = StreamReader.ReadLine
-                    LineNumber += 1
+                    If Line = StreamReader.ReadLine Then
+                        If StreamReader.EndOfStream Then Return LineNumber 'Quick and dirty ohne Fehlerprüfung, ob evtl. unvollständiger letzter Eintrag vorhanden, da Programm für nur einen Lauf programmiert ist
 
-                    If StreamReader.EndOfStream Then Return True 'Quick and dirty ohne Fehlerprüfung, ob evtl. unvollständiger letzter Eintrag vorhanden, da Programm für nur einen Lauf programmiert ist
-                    If Not POEntry.ImportPOLine(Line) Then
-                        Return LineNumber
-                    End If
+                        LineNumber += 1
+                        If Not POEntry.ImportPOLine(Line) Then
+                            Return LineNumber
+                        End If
                 Loop Until POEntry.IsComplete
 
                 _POEntries.Add(POEntry)
@@ -164,7 +177,6 @@ Public Class POFileClass
         _ProgressBar = ProgressBar
         _ProgressLabel = ProgressLabel
 
-        POEntry.Reset()
     End Sub
 
 End Class

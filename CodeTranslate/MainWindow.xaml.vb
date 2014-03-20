@@ -1,5 +1,12 @@
 ﻿Imports System.Windows.Forms
 
+Public Enum EntryType
+    SingularText = 1
+    PluralText = 2
+    Numeric = 3
+    DateTime = 4
+    Currency = 5
+End Enum
 Class MainWindow
 
     Private Sub cbSelectPOFile_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles cbSelectPOFile.Click

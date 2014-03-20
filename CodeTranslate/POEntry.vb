@@ -1,17 +1,13 @@
 ﻿Public Class POEntry
-    Private Enum EntryStatus
-        Empty = 0
-        ExtractFiles = 1
-        MsgIDExtracted = 2
-        MsgIDPluralExtracted = 3
-        ExtractionComplete = 4
-    End Enum
 
     Private _Files As New List(Of String)
-    Private _BaseEntry As New BaseEntry
-    Private Status As EntryStatus = EntryStatus.Empty
+    Private _BaseEntries As New List(Of BaseEntry)
+    Private _Properties As New EntryProperty
 
-    Private Shared _FuzzyEntryIsProcessed As Boolean = False
+    Private _RawEntryLines As New List(Of String)
+
+    Private _SearchString As String
+    Private _ReplaceString As String
 
     ReadOnly Property Files As List(Of String)
         Get
@@ -19,27 +15,27 @@
         End Get
     End Property
 
-    Property MsgID As String
+    ReadOnly Property BaseEntries As List(Of BaseEntry)
         Get
-            Return _BaseEntry.MsgID
+            Return _BaseEntries
         End Get
-        Set(value As String)
-            _BaseEntry.MsgID = value
-        End Set
     End Property
 
-    Property MsgStr As String
+    ReadOnly Property SearchString As String
         Get
-            Return _BaseEntry.MsgStr
+            Return _SearchString
         End Get
-        Set(value As String)
-            _BaseEntry.MsgStr = value
-        End Set
     End Property
 
-    ReadOnly Property BaseEntry As BaseEntry
+    ReadOnly Property ReplaceString As String
         Get
-            Return _BaseEntry
+            Return _ReplaceString
+        End Get
+    End Property
+
+    ReadOnly Property RawEntryLines As List(Of String)
+        Get
+            Return _RawEntryLines
         End Get
     End Property
 
@@ -56,7 +52,6 @@
     End Function
 
     Private Shared Function ImportPOLine(POLine As String, POEntry As POEntry) As Boolean
-        'Static Dim _FuzzyEntryIsProcessed As Boolean = False
 
         Select Case True
             Case POLine.StartsWith("#:")
@@ -78,9 +73,8 @@
                 If POEntry.Status = EntryStatus.ExtractFiles Then 'Ohne zu bearbeitende Files kein Eintrag
                     POEntry.MsgID = ExtractMsgID(POLine)
                     POEntry.Status = EntryStatus.MsgIDExtracted
-                ElseIf POEntry.Status = EntryStatus.Empty And Not _FuzzyEntryIsProcessed Then  'Am Anfang jeder po.-Datei ist eine sog. Fuzzy Entry mit Leerstrings als MsgId und MsgStr
+                ElseIf POEntry.Status = EntryStatus.Empty Then  'Am Anfang jeder po.-Datei ist eine sog. Fuzzy Entry mit Leerstrings als MsgId und MsgStr
                     POEntry.Status = EntryStatus.MsgIDExtracted
-                    _FuzzyEntryIsProcessed = True   'Wird diese gerade bearbeitet, ist die Files-Collection natürlich leer, was in diesem Falle kein Fehler ist
                 Else
                     Return False
                 End If
@@ -105,15 +99,19 @@
 
     End Function
 
+    Private Shared Function Analyze(POEntry As POEntry) As Boolean
+
+    End Function
+
+    Public Sub AddRawEntryLine(RawEntryLine As String)
+        _RawEntryLines.Add(RawEntryLine)
+    End Sub
+
+    Public Function Analyze() As Boolean
+        Return Analyze(Me)
+    End Function
+
     Public Function ImportPOLine(POLine As String) As Boolean
         Return ImportPOLine(POLine, Me)
     End Function
-
-    Public Function IsComplete() As Boolean
-        Return Status = EntryStatus.ExtractionComplete
-    End Function
-
-    Public Shared Sub Reset()
-        _FuzzyEntryIsProcessed = False
-    End Sub
 End Class

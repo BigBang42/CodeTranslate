@@ -6,15 +6,7 @@ CodeTranslate
 </name>
 </assembly>
 <members>
-<member name="M:CodeTranslate.MainWindow.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:CodeTranslate.MainWindow">
-	<summary>
-MainWindow
-</summary>
-</member><member name="M:CodeTranslate.Application.InitializeComponent">
+<member name="M:CodeTranslate.Application.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
@@ -25,6 +17,14 @@ Application Entry Point.
 </member><member name="T:CodeTranslate.Application">
 	<summary>
 Application
+</summary>
+</member><member name="M:CodeTranslate.MainWindow.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:CodeTranslate.MainWindow">
+	<summary>
+MainWindow
 </summary>
 </member><member name="P:CodeTranslate.My.MyWpfExtension.Application">
 	<summary>
