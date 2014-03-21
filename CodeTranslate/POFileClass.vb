@@ -50,14 +50,14 @@ Public Class POFileClass
                 _Files.Add(TempFile)
             End If
 
-            TempFile.Entries.Add(Entry.BaseEntry)
+            TempFile.Entries.Add(Entry)
         Next
     End Sub
 
     Private Function CreateEntryList() As Integer
         Dim Line As String
         Dim LineNumber As Integer
-        Dim POEntry As POEntry
+        Dim POEntry As POEntry = Nothing
 
         Using StreamReader As New System.IO.StreamReader(_POFilePath)
             Do While StreamReader.Peek > -1
@@ -67,29 +67,20 @@ Public Class POFileClass
                 If Line.StartsWith("#:") Then
                     If POEntry Is Nothing Then  'Allererste Entry wird angelegt
                         POEntry = New POEntry
-                    Else
-                        If POEntry.Analyze = False Then Return LineNumber 'Entry ist vollständig eingelesen und wird jetzt überprüft und die internen Properties gesetzt
-                        _POEntries.Add(POEntry)
+                    Else    'Eine Entry muss eingelesen sein, da mit "#:" die nächste beginnt
+                        If POEntry.Analyze = False Then Return LineNumber 'Entry ist vollständig eingelesen und wird jetzt überprüft und die internen Properties gesetzt, Abbruch, falls ungültiger Eintrag
+                        _POEntries.Add(POEntry) 'Die aktuelle Entry wird in die Liste aufgenommen und eine neue leere für den nächsten Eintrag erzeugt
                         POEntry = New POEntry
                     End If
-                Else
-                    POEntry.AddRawEntryLine(Line)
                 End If
 
-                Do
-                    If Line = StreamReader.ReadLine Then
-                        If StreamReader.EndOfStream Then Return LineNumber 'Quick and dirty ohne Fehlerprüfung, ob evtl. unvollständiger letzter Eintrag vorhanden, da Programm für nur einen Lauf programmiert ist
+                POEntry.AddRawEntryLine(Line)
+            Loop
 
-                        LineNumber += 1
-                        If Not POEntry.ImportPOLine(Line) Then
-                            Return LineNumber
-                        End If
-                Loop Until POEntry.IsComplete
+            If POEntry.Analyze = False Then Return LineNumber 'Letzte Entry überprüfen
 
-                _POEntries.Add(POEntry)
-                IntegratePOEntryIntoFileList(POEntry)
-
-            Loop Until StreamReader.EndOfStream
+            _POEntries.Add(POEntry)
+            IntegratePOEntryIntoFileList(POEntry)
         End Using
 
         Return 0
@@ -139,9 +130,14 @@ Public Class POFileClass
                 Log.WriteLine("File: {0}", File.Name)
                 Log.WriteLine()
 
-                For Each Entry As BaseEntry In File.Entries
+                For Each Entry As POEntry In File.Entries
                     Log.WriteLine("MsgID: {0}", Entry.MsgID)
                     Log.WriteLine("MsgStr: {0}", Entry.MsgStr)
+
+                    If Entry.Properties.Type = EntryType.PluralText Then
+                        Log.WriteLine("MsgID_Plural: {0}", Entry.MsgID_Plural)
+                        Log.WriteLine("MsgStr_Plural: {0}", Entry.MsgStr_Plural)
+                    End If
 
                     If Not String.IsNullOrEmpty(Entry.MsgStr) Then  'Nur schon übersetzte Strings ersetzen
                         NewFileContent = FileContent.Replace(String.Concat("__('", Entry.MsgID, "'"), Entry.MsgStr) 'MsgId kapseln, damit nicht evtl. Teilstrings ersetzt werden

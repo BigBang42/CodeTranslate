@@ -1,6 +1,6 @@
 ﻿Public Class FileToTranslate
     Dim _Name As String
-    Dim _Entries As New List(Of BaseEntry)
+    Dim _Entries As New List(Of POEntry)
 
     Property Name As String
         Get
@@ -11,11 +11,11 @@
         End Set
     End Property
 
-    Property Entries As List(Of BaseEntry)
+    Property Entries As List(Of POEntry)
         Get
             Return _Entries
         End Get
-        Set(value As List(Of BaseEntry))
+        Set(value As List(Of POEntry))
             _Entries = value
         End Set
     End Property

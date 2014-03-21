@@ -1,6 +1,7 @@
 ﻿Public Class BaseEntry
     Private _MsgID As String
     Private _MsgStr As String
+    Private _IsPlural As Boolean = False
 
     Property MsgID As String
         Get
