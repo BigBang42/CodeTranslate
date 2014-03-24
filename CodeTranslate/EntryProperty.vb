@@ -10,9 +10,9 @@
             _EntryType = value
             Select Case _EntryType
                 Case EntryType.SingularText
-                    _Prefix = "__("
+                    _Prefix = "__"
                 Case EntryType.PluralText
-                    _Prefix = "__n("
+                    _Prefix = "__n"
                 Case EntryType.Numeric
                 Case EntryType.DateTime
                 Case EntryType.Currency

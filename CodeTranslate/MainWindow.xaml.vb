@@ -7,6 +7,15 @@ Public Enum EntryType
     DateTime = 4
     Currency = 5
 End Enum
+
+Public Enum AnalyzeStatus
+    Start = 0
+    CreatingFileList = 1
+    CreatingMsgID = 2
+    CreatingMsgStr = 3
+    Completed = 4
+End Enum
+
 Class MainWindow
 
     Private Sub cbSelectPOFile_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles cbSelectPOFile.Click

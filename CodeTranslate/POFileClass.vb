@@ -32,7 +32,7 @@ Public Class POFileClass
             If File.Name IsNot Nothing Then TempFileList.Add(File)
         Next
 
-        Result = _Files.Count = TempFileList.Count
+        Result = (_Files.Count = TempFileList.Count)
         _Files = TempFileList
 
         Return Result
@@ -44,48 +44,69 @@ Public Class POFileClass
         For Each AffectedFile As String In Entry.Files
             TempFile = (From F As FileToTranslate In _Files Where F.Name = AffectedFile).FirstOrDefault
 
-            If TempFile Is Nothing Then
+            If TempFile Is Nothing Then     'Falls für dieses File bis jetzt noch kein POEntry-Eintrag besteht, es also noch nicht in der Liste ist, anlegen
                 TempFile = New FileToTranslate
                 TempFile.Name = AffectedFile
                 _Files.Add(TempFile)
             End If
 
-            TempFile.Entries.Add(Entry)
+            TempFile.Entries.Add(Entry)     'POEntry zu diesem File hinzufügen
         Next
+    End Sub
+
+    Private Sub AddPOEntryToPOEntryList(POEntry)
+        POEntry.Finish()
+        _POEntries.Add(POEntry)
+        IntegratePOEntryIntoFileList(POEntry)
     End Sub
 
     Private Function CreateEntryList() As Integer
         Dim Line As String
         Dim LineNumber As Integer
-        Dim POEntry As POEntry = Nothing
+        Dim POEntry As New POEntry
 
         Using StreamReader As New System.IO.StreamReader(_POFilePath)
             Do While StreamReader.Peek > -1
                 Line = StreamReader.ReadLine
                 LineNumber += 1
 
-                If Line.StartsWith("#:") Then
-                    If POEntry Is Nothing Then  'Allererste Entry wird angelegt
-                        POEntry = New POEntry
-                    Else    'Eine Entry muss eingelesen sein, da mit "#:" die nächste beginnt
-                        If POEntry.Analyze = False Then Return LineNumber 'Entry ist vollständig eingelesen und wird jetzt überprüft und die internen Properties gesetzt, Abbruch, falls ungültiger Eintrag
-                        _POEntries.Add(POEntry) 'Die aktuelle Entry wird in die Liste aufgenommen und eine neue leere für den nächsten Eintrag erzeugt
-                        POEntry = New POEntry
-                    End If
+                If Line.StartsWith("#:") AndAlso POEntry.IsValid Then   'Wenn neuer PO-Eintrag und aktuelle POEntry gültig dann Entry in Liste aufnehmen und neue leere erzeugen
+                    AddPOEntryToPOEntryList(POEntry)
+                    POEntry = New POEntry
+                ElseIf POEntry.ImportPOLine(Line) Then  'Wenn die Struktur des POFiles stimmt, PO-Zeile in POEntry aufnehmen
+                Else        'Strukturfehler im POFile
+                    Return LineNumber
                 End If
-
-                POEntry.AddRawEntryLine(Line)
             Loop
-
-            If POEntry.Analyze = False Then Return LineNumber 'Letzte Entry überprüfen
-
-            _POEntries.Add(POEntry)
-            IntegratePOEntryIntoFileList(POEntry)
         End Using
 
-        Return 0
+        If POEntry.IsEmpty Then
+            Return 0
+        ElseIf POEntry.IsValid And Not _POEntries.Contains(POEntry) Then    'Falls letzter Eintrag gültig und noch nicht in der Liste aufgenommen wurde
+            AddPOEntryToPOEntryList(POEntry)
+            Return 0
+        Else    'Letzte POEntry ist ungültig
+            Return LineNumber
+        End If
     End Function
 
+
+    Private Function ReplaceEntry(FileContent As String, POEntry As POEntry) As String
+        Dim SearchString As String = String.Empty, ReplaceString As String = String.Empty
+
+        'Ist jetzt erstmal schnell programmiert für genaue Übereinstimmung mit dem Searchstring - ansonsten wird variabel im FileContent unabhängig von Whitespaces u. ä. gesucht
+
+        Select Case POEntry.Properties.Type
+            Case EntryType.SingularText
+                SearchString = String.Concat(POEntry.Properties.Prefix, "('", POEntry.MsgID, "'")
+                ReplaceString = String.Concat(POEntry.Properties.Prefix, "('", POEntry.MsgStr, "'")
+            Case EntryType.PluralText
+                SearchString = String.Concat(POEntry.Properties.Prefix, "('", POEntry.MsgID, "', '", POEntry.MsgID_Plural, "'")
+                ReplaceString = String.Concat(POEntry.Properties.Prefix, "('", POEntry.MsgStr, "', '", POEntry.MsgStr_Plural, "'")
+        End Select
+
+        Return FileContent.Replace(SearchString, ReplaceString) 'MsgId kapseln, damit nicht evtl. Teilstrings ersetzt werden
+    End Function
     Public Function Process() As Boolean
         Dim FileContent As String
         Dim NewFileContent As String
@@ -140,7 +161,8 @@ Public Class POFileClass
                     End If
 
                     If Not String.IsNullOrEmpty(Entry.MsgStr) Then  'Nur schon übersetzte Strings ersetzen
-                        NewFileContent = FileContent.Replace(String.Concat("__('", Entry.MsgID, "'"), Entry.MsgStr) 'MsgId kapseln, damit nicht evtl. Teilstrings ersetzt werden
+                        'NewFileContent = FileContent.Replace(String.Concat("__('", Entry.MsgID, "'"), Entry.MsgStr) 'MsgId kapseln, damit nicht evtl. Teilstrings ersetzt werden
+                        NewFileContent = ReplaceEntry(FileContent, Entry)
                         If FileContent.Equals(NewFileContent) Then
                             Log.WriteLine("Error: MsgID not Found.")
                         Else
