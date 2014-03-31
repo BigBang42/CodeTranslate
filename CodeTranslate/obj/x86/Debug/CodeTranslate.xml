@@ -6,7 +6,15 @@ CodeTranslate
 </name>
 </assembly>
 <members>
-<member name="M:CodeTranslate.Application.InitializeComponent">
+<member name="M:CodeTranslate.MainWindow.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:CodeTranslate.MainWindow">
+	<summary>
+MainWindow
+</summary>
+</member><member name="M:CodeTranslate.Application.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
@@ -18,13 +26,18 @@ Application Entry Point.
 	<summary>
 Application
 </summary>
-</member><member name="M:CodeTranslate.MainWindow.InitializeComponent">
+</member><member name="P:CodeTranslate.My.Resources.Resources.ResourceManager">
 	<summary>
-InitializeComponent
+  Returns the cached ResourceManager instance used by this class.
 </summary>
-</member><member name="T:CodeTranslate.MainWindow">
+</member><member name="P:CodeTranslate.My.Resources.Resources.Culture">
 	<summary>
-MainWindow
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:CodeTranslate.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
 </member><member name="P:CodeTranslate.My.MyWpfExtension.Application">
 	<summary>
@@ -52,19 +65,6 @@ MainWindow
  Modul zum Definieren der im My-Namespace für WPF verfügbaren Eigenschaften
  </summary>
 	<remarks></remarks>
-</member><member name="P:CodeTranslate.My.Resources.Resources.ResourceManager">
-	<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member><member name="P:CodeTranslate.My.Resources.Resources.Culture">
-	<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:CodeTranslate.My.Resources.Resources">
-	<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
 </member>
 </members>
 </doc>

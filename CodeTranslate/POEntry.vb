@@ -12,8 +12,10 @@
     Private _ReplaceString As String
 
     Private _IsFuzzyEntry As Boolean = False
+    Private _IsPOFileHeader As Boolean = False
 
     Private Shared _ImportStatus As AnalyzeStatus = AnalyzeStatus.Start
+    Private Shared _POFileHeaderRead As Boolean = False
     Private Shared _CurrentPOLineMessagePrefix As String = String.Empty
 
     ReadOnly Property Files As List(Of String)
@@ -100,9 +102,18 @@
         End Get
     End Property
 
+    Property IsPOFileHeader As Boolean
+        Get
+            Return _IsPOFileHeader
+        End Get
+        Set(value As Boolean)
+            _IsPOFileHeader = value
+        End Set
+    End Property
+
     Private Shared Function IsValid(POEntry As POEntry) As Boolean
         If _ImportStatus = AnalyzeStatus.CreatingMsgStr Then
-            If String.IsNullOrEmpty(POEntry.MsgID) OrElse String.IsNullOrEmpty(POEntry.MsgStr) Then Return False
+            If String.IsNullOrEmpty(POEntry.MsgID) AndAlso Not _POFileHeaderRead = False AndAlso Not POEntry._IsPOFileHeader OrElse String.IsNullOrEmpty(POEntry.MsgStr) Then Return False
             If POEntry.Properties.Type = EntryType.PluralText AndAlso (String.IsNullOrEmpty(POEntry.MsgID_Plural) OrElse String.IsNullOrEmpty(POEntry.MsgStr_Plural)) Then Return False
             Return True
         Else
@@ -166,6 +177,12 @@
                 End If
 
             Case POLine.StartsWith("msgid")
+                If Not _POFileHeaderRead AndAlso _ImportStatus = AnalyzeStatus.Start Then
+                    _POFileHeaderRead = True
+                    POEntry.IsPOFileHeader = True
+                    _ImportStatus = AnalyzeStatus.CreatingFileList
+                End If
+
                 If _ImportStatus = AnalyzeStatus.CreatingFileList Then 'Ohne zu bearbeitende Files kein Eintrag
                     POEntry.Properties.Type = EntryType.SingularText
                     _CurrentPOLineMessagePrefix = "msgid"
@@ -201,7 +218,7 @@
                     Return False
                 End If
 
-            Case POLine.StartsWith(Chr(32))   'Dann gehört diese Zeile wohl zu einem MsgID bzw. MsgStr-Eintrag
+            Case POLine.StartsWith(Chr(34))   'Dann gehört diese Zeile wohl zu einem MsgID bzw. MsgStr-Eintrag
                 If {AnalyzeStatus.CreatingMsgID, AnalyzeStatus.CreatingMsgStr}.Contains(_ImportStatus) Then
                     ExtractMessage(POEntry, POLine, _CurrentPOLineMessagePrefix)
                 Else
@@ -223,5 +240,6 @@
     Public Sub New()
         _CurrentPOLineMessagePrefix = String.Empty
         _ImportStatus = AnalyzeStatus.Start
+        _POFileHeaderRead = False
     End Sub
 End Class
